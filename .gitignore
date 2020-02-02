@@ -3,10 +3,14 @@
 /public/storage
 /storage/*.key
 /vendor
+/.vagrant
 .env
 .env.backup
 .phpunit.result.cache
+after.sh
+aliases
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+Vagrantfile
