@@ -11,7 +11,7 @@ export default class App extends React.Component {
 		return (
 			<>
 				<Header />
-				<main className="p-3">
+				<main>
 					<Switch>
 						<Route path="/sign-in">
 							<SignIn />
