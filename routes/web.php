@@ -13,4 +13,4 @@
 
 Route::get('/{any?}', function ($any = null) {
     return view('app');
-});
+})->where('any', '.*');;

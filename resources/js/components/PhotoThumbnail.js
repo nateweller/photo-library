@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 export default class PhotoThumbnail extends React.Component {
 	render () {
 		return (
-			<div className={`photo-thumbnail card ${ this.props.className }`}>
+			<div className={`photo-thumbnail card ${ (this.props.className || '') }`}>
 				<div className="card-body card-body--compact">
-					<img src={ this.props.url } alt={ this.props.title } />
+					<img src={ this.props.url } alt={ this.props.title } title={ this.props.title } />
 				</div>
 			</div>
 		);
@@ -15,6 +15,6 @@ export default class PhotoThumbnail extends React.Component {
 
 PhotoThumbnail.propTypes = {
 	url: PropTypes.string.isRequired,
-	title: PropTypes.string.isRequired,
+	title: PropTypes.string,
 	className: PropTypes.string
 };

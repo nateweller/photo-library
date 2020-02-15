@@ -1,5 +1,9 @@
 @import 'variables';
 
+html {
+	overflow-x: hidden;
+}
+
 .card-body--compact {
 	padding: 0.75rem;
 }
@@ -14,6 +18,7 @@
 	}
 }
 
+.photo-thumbnail,
 .photo-thumbnail img {
 	max-width: 100%;
 	height: auto;
