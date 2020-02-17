@@ -1,4 +1,5 @@
 import React from 'react';
+import BatchForm from './BatchForm';
 
 export default class Sidebar extends React.Component {
 	render () {
@@ -6,14 +7,14 @@ export default class Sidebar extends React.Component {
 			<aside className="sidebar bg-light border-right border-bottom p-4">
 				<form className="small">
 					<div className="form-group">
-						<input 
-							type="text" 
+						<input
+							type="text"
 							name="search"
-							placeholder="Search Keywords..." 
+							placeholder="Search Keywords..."
 							className="form-control" />
 					</div>
 					<div className="form-group">
-						<label for="orientation">Orientation</label>
+						<label htmlFor="orientation">Orientation</label>
 						<select className="form-control" name="orientation">
 							<option value="any">Any</option>
 							<option value="landscape">Landscape</option>
@@ -21,7 +22,7 @@ export default class Sidebar extends React.Component {
 						</select>
 					</div>
 					<div className="form-group">
-						<label for="size">Minimum Size</label>
+						<label htmlFor="size">Minimum Size</label>
 						<select name="size" className="form-control">
 							<option value="any">Any</option>
 							<option value="4000">Extra Large (4000px)</option>
@@ -31,15 +32,27 @@ export default class Sidebar extends React.Component {
 						</select>
 					</div>
 					<div className="form-group">
-						<label for="photographer">Photographer</label>
+						<label htmlFor="photographer">Photographer</label>
 						<input
 							type="text"
 							name="photographer"
 							placeholder="Search Photographers..."
 							className="form-control" />
 					</div>
+                    <div className="btn btn-primary btn-block">Filter</div>
 				</form>
-			</aside>
+                <hr />
+                {
+                    this.props.user
+                        ? <BatchForm
+                            batch={this.props.batch}
+                            batchMode={this.props.batchMode}
+                            startBatchMode={this.props.startBatchMode}
+                            stopBatchMode={this.props.stopBatchMode}
+                          />
+                        : null
+                }
+            </aside>
 		);
 	}
 }

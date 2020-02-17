@@ -2,6 +2,31 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 export default class Header extends React.Component {
+    renderAnonNavLinks () {
+        return (
+            <li className="nav-item">
+                <NavLink to="/sign-in" className="nav-link" exact>
+                    Sign In
+                </NavLink>
+            </li>
+        );
+    };
+    renderUserNavLinks () {
+        return (
+            <>
+                <li className="nav-item">
+                    <NavLink to="/settings" className="nav-link" exact>
+                        Settings
+                    </NavLink>
+                </li>
+                <li className="nav-item">
+                    <NavLink to="/sign-out" className="nav-link" exact>
+                        Sign Out
+                    </NavLink>
+                </li>
+            </>
+        );
+    };
 	render () {
 		return (
 			<header>
@@ -17,11 +42,7 @@ export default class Header extends React.Component {
 									Browse Photos
 								</NavLink>
 							</li>
-							<li className="nav-item">
-								<NavLink to="/sign-in" className="nav-link" exact>
-									Sign In
-								</NavLink>
-							</li>
+							{ this.props.user ? this.renderUserNavLinks() : this.renderAnonNavLinks() }
 						</ul>
 					</div>
 				</nav>
