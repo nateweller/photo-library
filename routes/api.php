@@ -37,23 +37,23 @@ Route::middleware('auth:api')->post('/photos', function (Request $request) {
     return ['foo' => 'bar'];
 });
 
-Router::middleware('auth:api')->get('/settings', function (Request $request) {
+Route::middleware('auth:api')->get('/settings', function (Request $request) {
     // to do: get setting value by key
     return ['foo' => 'bar'];
 });
 
-Router::middleware('auth:api')->post('/settings', function (Request $request) {
+Route::middleware('auth:api')->post('/settings', function (Request $request) {
     // to do: update setting value by key
     return ['foo' => 'bar'];
 });
 
-Router::middleware('auth:api')->get('/users', function (Request $request) {
+Route::middleware('auth:api')->get('/users', function (Request $request) {
     // to do: single user via ID
     // to do: list of users
     return ['foo' => 'bar'];
 });
 
-Router::middleware('auth:api')->post('/users', function (Request $request) {
+Route::middleware('auth:api')->post('/users', function (Request $request) {
     // to do: update user via ID
     // to do: insert new user
     return ['foo' => 'bar'];
