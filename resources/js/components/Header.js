@@ -15,6 +15,11 @@ export default class Header extends React.Component {
         return (
             <>
                 <li className="nav-item">
+                    <NavLink to="/upload" className="nav-link" exact>
+                        Upload
+                    </NavLink>
+                </li>
+                <li className="nav-item">
                     <NavLink to="/settings" className="nav-link" exact>
                         Settings
                     </NavLink>

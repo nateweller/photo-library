@@ -6,6 +6,7 @@ import Header from './Header';
 import Home from '../pages/Home';
 import SignIn from '../pages/SignIn';
 import PhotoDetail from '../pages/PhotoDetail';
+import Upload from '../pages/Upload';
 import Settings from '../pages/settings/Settings';
 
 export default class App extends React.Component {
@@ -23,6 +24,7 @@ export default class App extends React.Component {
 					<Switch>
 						<Route path="/sign-in" component={SignIn} setCurrentUser={this.setCurrentUser} />
 						<Route path="/photo/:id" component={PhotoDetail} />
+                        <Route path="/upload" component={Upload} />
                         <Route path="/settings" component={Settings} />
 						<Route path="/">
                             <Home user={this.state.user} />
