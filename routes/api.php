@@ -18,24 +18,9 @@ Route::post('/auth', function (Request $request) {
     return ['foo' => 'bar'];
 });
 
-Route::get('/photos', function (Request $request) {
-    // to do: single photo result via ID
-    // to do: array of photos result via search params:
-        // keyword search
-        // collection filter
-        // date filters
-        // photographer search
-        // status filter
-        // size filters
-        // model search
-    return ['foo' => 'bar'];
-});
+Route::get('/photos', 'PhotoController@fetchPhotos');
 
-Route::middleware('auth:api')->post('/photos', function (Request $request) {
-    // to do: photo update via ID(s)
-    // to do: photo insert
-    return ['foo' => 'bar'];
-});
+Route::post('/photos', 'PhotoController@uploadPhoto');
 
 Route::middleware('auth:api')->get('/settings', function (Request $request) {
     // to do: get setting value by key
