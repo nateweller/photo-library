@@ -19,6 +19,7 @@ class PhotoController extends Controller
         );
     }
 
+    // to do: pagination support
     public function fetchPhotos(Request $request)
     {
         // fetch single photo via ID
@@ -64,6 +65,22 @@ class PhotoController extends Controller
         }
         if ($request->input('max_height')) {
             $filters[] = \App\Photo::where('height', '<=', $request->input('max_height'));
+        }
+        if ($request->input('orientation')) {
+            switch ($request->input('orientation')) {
+                case 'landscape':
+                    $filters[] = \App\Photo::whereColumn('height', '<', 'width');
+                    break;
+                case 'portrait':
+                    $filters[] = \App\Photo::whereColumn('height', '>', 'width');
+                    break;
+                case 'square':
+                    $filters[] = \App\Photo::whereColumn('height', 'width');
+                    break;
+                default:
+                    // ignore invalid orientation filters
+                    break;
+            }
         }
         if ($request->input('models')) {
             // to do - query from model_photo
