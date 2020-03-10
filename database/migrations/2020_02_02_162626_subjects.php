@@ -4,20 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Models extends Migration
+class Subjects extends Migration
 {
     /**
      * Run the migrations.
-	 * Creates the 'models' table for storing data related to
+	 * Creates the 'subjects' table for storing data related to
 	 * people shown in photos.
-	 * Creates the 'model_photos" table for managing relationships
-	 * between models and the photos they are shown in.
+	 * Creates the 'subject_photos" table for managing relationships
+	 * between subjects and the photos they are shown in.
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('models', function (Blueprint $table) {
+        Schema::create('subjects', function (Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->string('first_name');
 			$table->string('last_name');
@@ -26,23 +26,23 @@ class Models extends Migration
 			$table->string('email_address');
 			$table->text('description');
 		});
-		Schema::create('model_photos', function (Blueprint $table) {
+		Schema::create('subject_photo', function (Blueprint $table) {
 			$table->bigIncrements('id');
-			$table->bigInteger('model_id');
+			$table->bigInteger('subject_id');
 			$table->bigInteger('photo_id');
 		});
     }
 
     /**
      * Reverse the migrations.
-	 * Drops the 'models' table.
-	 * Drops the 'model_photos' table.
+	 * Drops the 'subjects' table.
+	 * Drops the 'subject_photos' table.
      *
      * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('models');
-		Schema::dropIfExists('model_photos');
+        Schema::dropIfExists('subjects');
+		Schema::dropIfExists('subject_photos');
     }
 }

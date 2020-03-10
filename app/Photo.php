@@ -19,4 +19,14 @@ class Photo extends Model
         'height',
         'taken_at',
     ];
+
+    public function collections()
+    {
+        return $this->belongsToMany('App\Collection');
+    }
+
+    public function subjects()
+    {
+        return $this->belongsToMany('App\Subject');
+    }
 }

@@ -22,7 +22,7 @@ class Collections extends Migration
 			$table->string('name');
 			$table->text('description')->nullable();
 		});
-		Schema::create('collection_photos', function (Blueprint $table) {
+		Schema::create('collection_photo', function (Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->bigInteger('collection_id');
 			$table->bigInteger('photo_id');
