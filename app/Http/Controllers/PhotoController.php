@@ -21,16 +21,65 @@ class PhotoController extends Controller
 
     public function fetchPhotos(Request $request)
     {
-        // to do: single photo result via ID
-        // to do: array of photos result via search params:
-            // keyword search
-            // collection filter
-            // date filters
-            // photographer search
-            // status filter
-            // size filters
-            // model search
-        return App\Photo::where('status', Config::get('constants.status.published'))
+        // fetch single photo via ID
+        if ($request->input('id')) {
+            return \App\Photo::findOrFail($request->input('id'));
+        }
+        // check request for filter paramaters and build query if found
+        $filters = [];
+        if ($request->input('search')) {
+            $filters[] = \App\Photo::where('title', 'LIKE', "%{$request->input('search')}%");
+            $filters[] = \App\Photo::where('description', 'LIKE', "%{$request->input('search')}%");
+            $filters[] = \App\Photo::where('tags', 'LIKE', "%{$request->input('search')}%");
+        }
+        if ($request->input('collections')) {
+            // to do - query from collection_photo
+        }
+        if ($request->input('min_taken_at')) {
+            $filters[] = \App\Photo::where('taken_at', '>=', $request->input('min_taken_at'));
+        }
+        if ($request->input('max_taken_at')) {
+            $filters[] = \App\Photo::where('taken_at', '<=', $request->input('max_taken_at'));
+        }
+        if ($request->input('min_created_at')) {
+            $filters[] = \App\Photo::where('created_at', '>=', $request->input('min_created_at'));
+        }
+        if ($request->input('max_created_at')) {
+            $filters[] = \App\Photo::where('created_at', '>=', $request->input('max_created_at'));
+        }
+        if ($request->input('photographer')) {
+            $filters[] = \App\Photo::where('photographer', 'LIKE', "%{$request->input('photographer')}%");
+        }
+        if ($request->input('status')) {
+            $filters[] = \App\Photo::where('status', '=', $request->input('status'));
+        }
+        if ($request->input('min_width')) {
+            $filters[] = \App\Photo::where('width', '>=', $request->input('max_width'));
+        }
+        if ($request->input('max_width')) {
+            $filters[] = \App\Photo::where('width', '<=', $request->input('max_width'));
+        }
+        if ($request->input('min_height')) {
+            $filters[] = \App\Photo::where('height', '>=', $request->input('max_height'));
+        }
+        if ($request->input('max_height')) {
+            $filters[] = \App\Photo::where('height', '<=', $request->input('max_height'));
+        }
+        if ($request->input('models')) {
+            // to do - query from model_photo
+        }
+        // return filtered results
+        if (!empty($filters)) {
+            $results = $filters[0];
+            foreach ($filters as $i => $filter) {
+                if ($i === 0) continue; // first filter is already initialized
+                $results = $results->union($filter);
+            }
+            return $results->get();
+        }
+        // return latest 25 photos (default)
+        return \App\Photo::where('status', \Config::get('constants.status.published'))
+            ->latest()
             ->take(25)
             ->get();
     }
