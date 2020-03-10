@@ -18,6 +18,10 @@ Route::post('/auth', function (Request $request) {
     return ['foo' => 'bar'];
 });
 
+Route::get('/collections', 'CollectionsController@fetchCollections');
+
+Route::post('/collections', 'CollectionsController@saveCollection');
+
 Route::get('/photos', 'PhotoController@fetchPhotos');
 
 Route::post('/photos', 'PhotoController@uploadPhoto');
