@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import axios from 'axios';
+import Config from '../config';
 
 import Sidebar from '../components/Sidebar';
 import PhotoThumbnail from '../components/PhotoThumbnail';
@@ -18,6 +20,29 @@ class Home extends React.Component {
         },
         batchMode: false,
         batch: {},
+    };
+    componentDidMount() {
+        this.fetchPhotos();
+    };
+    fetchPhotos = (params) => {
+        params = params || {};
+        const queryString = Object.keys(params).reduce((queryString, key) => {
+            queryString += `${key}=${encodeURI(params[key])}&`;
+            return queryString;
+        }, '?');
+        axios.get(`${Config.serverURL}photos${queryString}`)
+            .then(response => {
+                // convert photo array to key-ID object
+                const photos = response.data.reduce((photos, photo) => {
+                    photos[photo.id] = photo;
+                    return photos;
+                }, {});
+                this.setState({ photos });
+            })
+            .catch(error => {
+                alert('Photos could not be loaded. Please try again.');
+                console.error(error);
+            });
     };
     startBatchMode = () => {
         this.setState({ batchMode: true });
@@ -76,6 +101,7 @@ class Home extends React.Component {
                         batchMode={this.state.batchMode}
                         startBatchMode={this.startBatchMode}
                         stopBatchMode={this.stopBatchMode}
+                        fetchPhotos={this.fetchPhotos}
                     />
 				</div>
 				<div className="col-lg-9">
