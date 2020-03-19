@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import Config from '../config';
+import Util from '../util';
 
 import Sidebar from '../components/Sidebar';
 import PhotoThumbnail from '../components/PhotoThumbnail';
@@ -18,11 +19,14 @@ class Home extends React.Component {
             7: { title: 'Test 7', url: 'https://via.placeholder.com/400x300', id: 7 },
             8: { title: 'Test 8', url: 'https://via.placeholder.com/400x300', id: 8 },
         },
+        collections: [],
         batchMode: false,
         batch: {},
+        batchData: {}
     };
     componentDidMount() {
         this.fetchPhotos();
+        this.fetchCollections();
     };
     fetchPhotos = (params) => {
         params = params || {};
@@ -41,6 +45,17 @@ class Home extends React.Component {
             })
             .catch(error => {
                 alert('Photos could not be loaded. Please try again.');
+                console.error(error);
+            });
+    };
+    fetchCollections = () => {
+        axios.get(`${Config.serverURL}collections`)
+            .then(response => {
+                const collections = response.data;
+                this.setState({ collections });
+            })
+            .catch(error => {
+                alert('Collections could not be loaded. Please try again.');
                 console.error(error);
             });
     };
@@ -66,6 +81,30 @@ class Home extends React.Component {
             // not in batch mode - navigate to photo
             this.props.history.push(`/photo/${photoID}`);
         }
+    };
+    updateBatchData = e => {
+        const batchData = {
+            [e.target.name]: e.target.value
+        };
+        this.setState({ batchData });
+    };
+    saveBatch = () => {
+        const ids = Object.keys(this.state.batch);
+        const { batchData } = { ...this.state };
+        batchData.ids = ids;
+        if (!batchData.ids || !batchData.ids.length) {
+            alert('Empty batch! Select photos by clicking them.');
+            return;
+        }
+        axios.post(`${Config.serverURL}photos`, Util.convertObjectToFormData(batchData))
+            .then(response => {
+                this.stopBatchMode();
+                // to do: success alert
+            })
+            .catch(error => {
+                alert(error);
+                console.error(error);
+            });
     };
 	renderPhotoGrid = (photos) => {
 		if (!photos) return <div>No Results.</div>;
@@ -101,7 +140,10 @@ class Home extends React.Component {
                         batchMode={this.state.batchMode}
                         startBatchMode={this.startBatchMode}
                         stopBatchMode={this.stopBatchMode}
+                        updateBatchData={this.updateBatchData}
+                        saveBatch={this.saveBatch}
                         fetchPhotos={this.fetchPhotos}
+                        collections={this.state.collections}
                     />
 				</div>
 				<div className="col-lg-9">

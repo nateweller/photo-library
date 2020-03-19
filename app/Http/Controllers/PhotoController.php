@@ -101,11 +101,29 @@ class PhotoController extends Controller
             ->get();
     }
 
-    public function uploadPhoto(Request $request)
+    public function savePhoto(Request $request)
     {
         // to do: generate and save YYYY/MM/example.jpg folder structure when uploading to Digital Ocean
         // to do: ensure image path is unique when uploading to Digital Ocean
         // to do: re-enable auth middleware and insert current user ID as author_id
+        if ($request->input('ids')) {
+            // update batch of existing photos - limited fields all optional
+            $photoData = $request->validate([
+                'status'        => 'nullable|numeric',
+                'title'         => 'nullable|string',
+                'description'   => 'nullable|string',
+                'photographer'  => 'nullable|string',
+                'tags'          => 'nullable|string'
+            ]);
+            foreach ($request->input('ids') as $photoID) {
+                $photo = \App\Photo::find($photoID);
+                $photoSaved = $photo->update($photoData);
+                if (!$photoSaved) {
+                    abort(500, 'One or more photos could not be updated. Please try again.');
+                }
+            }
+            return ['success' => true];
+        }
 
         // 1. validate request
         if ($request->input('id')) {

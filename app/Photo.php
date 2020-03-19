@@ -29,4 +29,23 @@ class Photo extends Model
     {
         return $this->belongsToMany('App\Subject');
     }
+
+    /**
+     * Add Tags
+     *
+     * @param string $tagString Comma-delimited list of tags to add
+     * @return string The new value of $this->tags
+     */
+    public function addTags($tagString) {
+        $newTags = explode(',', $tagString);
+        $currentTags = explode(',', $this->tags);
+        foreach ($newTags as $newTag) {
+            $newTag = trim($newTag);
+            if (!in_array($newTag, $currentTags)) {
+                $this->tags .= ",$newTag";
+            }
+        }
+        return $this->tags;
+    }
+
 }

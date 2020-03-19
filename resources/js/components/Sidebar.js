@@ -6,6 +6,7 @@ export default class Sidebar extends React.Component {
     state = {
         showAdvancedSearch: false,
         search: '',
+        collection: '',
         orientation: 'any',
         size: 'any',
         photographer: ''
@@ -21,8 +22,10 @@ export default class Sidebar extends React.Component {
     search = e => {
         e.preventDefault();
         const params = {};
-        const { search, orientation, size, photographer } = { ...this.state };
+        const { search, collection, orientation, size, photographer } = { ...this.state };
         if (search) params.search = search;
+        if (collection) params.collection;
+        else if (this.props.collections[0]) params.collection = this.props.collections[0].id;
         if (orientation) params.orientation = orientation;
         if (size) params.size = size;
         if (photographer) params.photographer = photographer;
@@ -58,6 +61,19 @@ export default class Sidebar extends React.Component {
                     </div>
                     <div style={{ display: this.state.showAdvancedSearch ? 'block' : 'none' }}>
                         <div className="form-group mt-2">
+                            <label htmlFor="collection">Collection</label>
+                            <select
+                                name="collection"
+                                className="form-control"
+                                value={this.state.collection}
+                                onChange={this.handleChange}
+                            >
+                                {this.props.collections.map(collection => {
+                                    return <option value={collection.id} key={collection.id}>{collection.name}</option>
+                                })}
+                            </select>
+                        </div>
+                        <div className="form-group">
                             <label htmlFor="orientation">Orientation</label>
                             <select
                                 name="orientation"
@@ -108,6 +124,8 @@ export default class Sidebar extends React.Component {
                             batchMode={this.props.batchMode}
                             startBatchMode={this.props.startBatchMode}
                             stopBatchMode={this.props.stopBatchMode}
+                            saveBatch={this.props.saveBatch}
+                            updateBatchData={this.props.updateBatchData}
                           />
                         : null
                 }

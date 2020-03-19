@@ -24,7 +24,7 @@ Route::post('/collections', 'CollectionsController@saveCollection');
 
 Route::get('/photos', 'PhotoController@fetchPhotos');
 
-Route::post('/photos', 'PhotoController@uploadPhoto');
+Route::post('/photos', 'PhotoController@savePhoto');
 
 Route::middleware('auth:api')->get('/settings', function (Request $request) {
     // to do: get setting value by key
