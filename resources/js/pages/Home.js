@@ -9,17 +9,14 @@ import PhotoThumbnail from '../components/PhotoThumbnail';
 
 class Home extends React.Component {
 	state = {
-        photos: {
-            1: { title: 'Test 1', url: 'https://via.placeholder.com/400x300', id: 1 },
-            2: { title: 'Test 2', url: 'https://via.placeholder.com/400x300', id: 2 },
-            3: { title: 'Test 3', url: 'https://via.placeholder.com/400x300', id: 3 },
-            4: { title: 'Test 4', url: 'https://via.placeholder.com/400x300', id: 4 },
-            5: { title: 'Test 5', url: 'https://via.placeholder.com/400x300', id: 5 },
-            6: { title: 'Test 6', url: 'https://via.placeholder.com/400x300', id: 6 },
-            7: { title: 'Test 7', url: 'https://via.placeholder.com/400x300', id: 7 },
-            8: { title: 'Test 8', url: 'https://via.placeholder.com/400x300', id: 8 },
-        },
+        photos: {},
         collections: [],
+        pagination: {
+            currentPage: 1,
+            lastPage: 1,
+            perPage: 25,
+            total: 0
+        },
         batchMode: false,
         batch: {},
         batchData: {}
@@ -33,15 +30,23 @@ class Home extends React.Component {
         const queryString = Object.keys(params).reduce((queryString, key) => {
             queryString += `${key}=${encodeURI(params[key])}&`;
             return queryString;
-        }, '?');
+        }, `?page=${this.state.pagination.currentPage}`);
         axios.get(`${Config.serverURL}photos${queryString}`)
             .then(response => {
                 // convert photo array to key-ID object
-                const photos = response.data.reduce((photos, photo) => {
+                const photos = response.data.data.reduce((photos, photo) => {
                     photos[photo.id] = photo;
                     return photos;
                 }, {});
                 this.setState({ photos });
+                // update pagination
+                const pagination = {
+                    currentPage: response.data['current_page'],
+                    lastPage: response.data['last_page'],
+                    perPage: response.data['per_page'],
+                    total: response.data['total']
+                };
+                this.setState({ pagination });
             })
             .catch(error => {
                 alert('Photos could not be loaded. Please try again.');
@@ -106,28 +111,86 @@ class Home extends React.Component {
                 console.error(error);
             });
     };
+    changePage = page => {
+        const { pagination } = { ...this.state };
+        if (page > 0 && page <= pagination.lastPage) {
+            pagination.currentPage = page;
+        }
+        this.setState({ pagination });
+        this.fetchPhotos();
+    };
+    renderPaginationBar = () => {
+        return (
+            <div className="text-right mb-2">
+                Page {this.state.pagination.currentPage} of {this.state.pagination.lastPage} ({this.state.pagination.total} Results)
+            </div>
+        );
+    };
+    renderPaginationControls = () => {
+        const { pagination } = { ...this.state };
+        const renderButton = i => {
+            let page = i + 1;
+            if (page > pagination.lastPage) return null;
+            if (pagination.lastPage >= 5 && pagination.currentPage >= 3) {
+                page = pagination.currentPage - (2 - i);
+            }
+            if (pagination.lastPage >= 5 && pagination.currentPage == pagination.lastPage - 1) {
+                page = pagination.currentPage - (3 - i);
+            }
+
+            if (pagination.lastPage >= 5 && pagination.currentPage == pagination.lastPage) {
+                page = pagination.currentPage - (4 - i);
+            }
+            return (
+                <li className={page == pagination.currentPage ? 'page-item disabled' : 'page-item'}>
+                    <span className="page-link" onClick={() => this.changePage(page)}>{ page }</span>
+                </li>
+            );
+        }
+        return (
+            <nav aria-label="Page Navigation">
+                <ul className="pagination justify-content-center">
+                    <li className={pagination.currentPage == 1 ? 'page-item disabled' : 'page-item'}>
+                        <span className="page-link" onClick={() => this.changePage(pagination.currentPage - 1)}>
+                            &laquo;
+                        </span>
+                    </li>
+                    {[0,1,2,3,4].map(pageNumber => renderButton(pageNumber))}
+                    <li className={pagination.currentPage == pagination.lastPage ? 'page-item disabled' : 'page-item'}>
+                        <span className="page-link" onClick={() => this.changePage(pagination.currentPage + 1)}>
+                            &raquo;
+                        </span>
+                    </li>
+                </ul>
+            </nav>
+        );
+    };
 	renderPhotoGrid = (photos) => {
 		if (!photos) return <div>No Results.</div>;
 		return (
-			<div className="photo-grid row">
-				{ Object.keys(photos).map(photoID => {
-                    let className = 'photo-grid__item';
-                    if (this.state.batch[photoID]) {
-                        className += ' photo-grid__item--selected';
-                    }
-                    return (
-                        <div className="col-6 col-md-4 col-lg-3" key={ photoID }>
-                            <div onClick={ () => this.selectPhoto(photoID) }>
-                                <PhotoThumbnail
-                                    url={ photos[photoID].url }
-                                    title={ photos[photoID].title }
-                                    className={ className }
-                                />
+            <>
+                {this.renderPaginationBar()}
+                <div className="photo-grid row">
+                    { Object.keys(photos).map(photoID => {
+                        let className = 'photo-grid__item';
+                        if (this.state.batch[photoID]) {
+                            className += ' photo-grid__item--selected';
+                        }
+                        return (
+                            <div className="col-6 col-md-4 col-lg-3" key={ photoID }>
+                                <div onClick={ () => this.selectPhoto(photoID) }>
+                                    <PhotoThumbnail
+                                        url={ photos[photoID].url }
+                                        title={ photos[photoID].title }
+                                        className={ className }
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    );
-                }) }
-			</div>
+                        );
+                    }) }
+                </div>
+                {this.renderPaginationControls()}
+            </>
 		)
 	}
 	render () {

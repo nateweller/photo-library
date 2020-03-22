@@ -19,7 +19,6 @@ class PhotoController extends Controller
         );
     }
 
-    // to do: pagination support
     public function fetchPhotos(Request $request)
     {
         // fetch single photo via ID
@@ -86,19 +85,20 @@ class PhotoController extends Controller
             // to do - query from model_photo
         }
         // return filtered results
+        $perPage = $request->input('perPage') ?: 25;
         if (!empty($filters)) {
             $results = $filters[0];
             foreach ($filters as $i => $filter) {
                 if ($i === 0) continue; // first filter is already initialized
                 $results = $results->union($filter);
             }
-            return $results->get();
+            return $results
+                ->paginate($perPage);
         }
         // return latest 25 photos (default)
         return \App\Photo::where('status', \Config::get('constants.status.published'))
             ->latest()
-            ->take(25)
-            ->get();
+            ->paginate($perPage);
     }
 
     public function savePhoto(Request $request)
