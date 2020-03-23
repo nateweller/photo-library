@@ -23,7 +23,7 @@ export default class App extends React.Component {
 				<main>
 					<Switch>
 						<Route path="/sign-in" component={SignIn} setCurrentUser={this.setCurrentUser} />
-						<Route path="/photo/:id" component={PhotoDetail} />
+						<Route path="/photo/:photoID" component={PhotoDetail} />
                         <Route path="/upload" component={Upload} />
                         <Route path="/settings" component={Settings} />
 						<Route path="/">
