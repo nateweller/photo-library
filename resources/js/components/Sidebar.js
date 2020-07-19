@@ -1,15 +1,12 @@
 import React from 'react';
 import BatchForm from './BatchForm';
 import { GoSettings } from 'react-icons/go';
+import AdvancedSearch from './AdvancedSearch';
 
 export default class Sidebar extends React.Component {
     state = {
         showAdvancedSearch: false,
-        search: '',
-        collection: '',
-        orientation: 'any',
-        size: 'any',
-        photographer: ''
+        search: ''
     };
     handleChange = e => {
         this.setState({ [e.target.name]: e.target.value });
@@ -59,61 +56,7 @@ export default class Sidebar extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div style={{ display: this.state.showAdvancedSearch ? 'block' : 'none' }}>
-                        <div className="form-group mt-2">
-                            <label htmlFor="collection">Collection</label>
-                            <select
-                                name="collection"
-                                className="form-control"
-                                value={this.state.collection}
-                                onChange={this.handleChange}
-                            >
-                                {this.props.collections.map(collection => {
-                                    return <option value={collection.id} key={collection.id}>{collection.name}</option>
-                                })}
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="orientation">Orientation</label>
-                            <select
-                                name="orientation"
-                                className="form-control"
-                                value={this.state.orientation}
-                                onChange={this.handleChange}
-                            >
-                                <option value="any">Any</option>
-                                <option value="landscape">Landscape</option>
-                                <option value="portrait">Portrait</option>
-                                <option value="square">Square</option>
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="size">Minimum Size</label>
-                            <select
-                                name="size"
-                                className="form-control"
-                                value={this.state.size}
-                                onChange={this.handleChange}
-                            >
-                                <option value="any">Any</option>
-                                <option value="4000">Extra Large (4000px)</option>
-                                <option value="2000">Large (2000px)</option>
-                                <option value="1000">Medium (1000px)</option>
-                                <option value="500">Small (500px)</option>
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="photographer">Photographer</label>
-                            <input
-                                type="text"
-                                name="photographer"
-                                placeholder="Search Photographers..."
-                                className="form-control"
-                                value={this.state.photographer}
-                                onChange={this.handleChange}
-                            />
-                        </div>
-                    </div>
+                    <AdvancedSearch isOpen={this.state.showAdvancedSearch} />
                     <button type="submit" className="btn btn-primary btn-block">Search</button>
 				</form>
                 <hr />

@@ -142,7 +142,7 @@ class Home extends React.Component {
                 page = pagination.currentPage - (4 - i);
             }
             return (
-                <li className={page == pagination.currentPage ? 'page-item disabled' : 'page-item'}>
+                <li className={page == pagination.currentPage ? 'page-item disabled' : 'page-item'} key={i}>
                     <span className="page-link" onClick={() => this.changePage(page)}>{ page }</span>
                 </li>
             );

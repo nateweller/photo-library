@@ -1,5 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
+import { Provider } from 'react-redux';
+import store from '../store';
+
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import Header from './Header';
@@ -18,7 +22,7 @@ export default class App extends React.Component {
     };
 	render () {
 		return (
-			<>
+			<Provider store={store}>
 				<Header user={this.state.user} />
 				<main>
 					<Switch>
@@ -31,7 +35,7 @@ export default class App extends React.Component {
                         </Route>
 					</Switch>
 				</main>
-			</>
+			</Provider>
 		);
 	};
 }
