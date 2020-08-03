@@ -5,9 +5,11 @@ import axios from 'axios';
 import { Config } from '../config';
 
 import PhotoThumbnail from '../components/PhotoThumbnail';
+import PhotoForm from '../components/PhotoForm';
 
 export default class PhotoDetail extends React.Component {
     state = {
+        editMode: false,
         photo: {
             title: '',
             description: '',
@@ -37,7 +39,14 @@ export default class PhotoDetail extends React.Component {
 		if (!this.state.takenAt) return "Unknown";
 		const timestamp = moment.unix(unixTimestamp);
 		return timestamp.format("MMMM Do YYYY, h:mm:ss a")
-	};
+    };
+    onPhotoUpdate = e => {
+        const { photo } = {...this.state};
+        const { name, type, value } = e.target;
+        const val = type === 'number' ? parseFloat(value) : value;
+        photo[name] = val;
+        this.setState({ photo });
+    };
 	render () {
 		return (
 			<div className="row">
@@ -74,10 +83,12 @@ export default class PhotoDetail extends React.Component {
 				</div>
 				<div className="col-lg-9">
 					<div className="py-4 pr-4">
-						<PhotoThumbnail
-							url={ this.state.photo.url }
-							title={ this.state.photo.title }
-							className="d-inline-block" />
+                        <PhotoThumbnail
+                            url={ this.state.photo.url }
+                            title={ this.state.photo.title }
+                            className="d-inline-block" />
+                        <h3 className="mt-4 mb-2">Edit Photo</h3>
+                        <PhotoForm photo={this.state.photo} handleChange={this.onPhotoUpdate} />
 					</div>
 				</div>
 			</div>

@@ -30,7 +30,7 @@ class Home extends React.Component {
         const queryString = Object.keys(params).reduce((queryString, key) => {
             queryString += `${key}=${encodeURI(params[key])}&`;
             return queryString;
-        }, `?page=${this.state.pagination.currentPage}`);
+        }, `?page=${this.state.pagination.currentPage}&`);
         axios.get(`${Config.serverURL}photos${queryString}`)
             .then(response => {
                 // convert photo array to key-ID object

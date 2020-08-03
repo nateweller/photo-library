@@ -3,7 +3,9 @@ import React from 'react';
 class Collections extends React.Component {
     render () {
         return (
-            <>Collections SETTINGS</>
+            <>
+                <h2>Manage Collections</h2>
+            </>
         );
     };
 }
