@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import OutsideClickHandler from 'react-outside-click-handler';
 import DatePicker from 'react-datepicker';
 import { setFilters } from '../actions';
 
@@ -18,6 +19,20 @@ function AdvancedSearch(props) {
     };
 
     const updateSearch = newFilters => props.dispatch(setFilters({ ...filters, ...newFilters }));
+
+    const renderKeywordsFilter = () => (
+        <>
+            <label htmlFor="advanced-search">Search</label>
+            <input
+                type="text"
+                name="advanced-search"
+                placeholder="Keywords"
+                className="form-control"
+                value={filters.search || ''}
+                onChange={e => updateSearch({ search: e.target.value })}
+            />
+        </>
+    );
 
     const renderCollectionFilter = () => (
         <>
@@ -80,7 +95,7 @@ function AdvancedSearch(props) {
                 name="photographer"
                 placeholder="Search Photographers..."
                 className="form-control"
-                value={filters.photographer}
+                value={filters.photographer || ''}
                 onChange={e => updateSearch({ photographer: e.target.value })}
             />
         </>
@@ -166,68 +181,81 @@ function AdvancedSearch(props) {
 
     return (
         <div className={getClassName()}>
-            <div className="window__content container">
-                <div className="row">
-                    <div className="col-md">
-                        <div className="form-group">
-                            {renderCollectionFilter()}
-                        </div>
-                        <div className="form-group">
-                            {renderOrientationFilter()}
-                        </div>
-                        <div className="form-group">
-                            {renderSizeFilter()}
-                        </div>
-                        <div className="form-group">
-                            {renderPhotographerFilter()}
+            <OutsideClickHandler onOutsideClick={props.onClose}>
+                <div className="window__content container">
+                    <div className="row">
+                        <div className="col">
+                            <div className="form-group">
+                                {renderKeywordsFilter()}
+                            </div>
                         </div>
                     </div>
-                    <div className="col-md">
-                        <div className="row">
-                            <div className="col-lg">
-                                <div className="form-group">
-                                    {renderMinDateTakenFilter()}
+                    <div className="row">
+                        <div className="col-md">
+                            <div className="form-group">
+                                {renderCollectionFilter()}
+                            </div>
+                            <div className="form-group">
+                                {renderOrientationFilter()}
+                            </div>
+                            <div className="form-group">
+                                {renderSizeFilter()}
+                            </div>
+                            <div className="form-group">
+                                {renderPhotographerFilter()}
+                            </div>
+                        </div>
+                        <div className="col-md">
+                            <div className="row">
+                                <div className="col-lg">
+                                    <div className="form-group">
+                                        {renderMinDateTakenFilter()}
+                                    </div>
+                                </div>
+                                <div className="col-lg">
+                                    <div className="form-group">
+                                        {renderMaxDateTakenFilter()}
+                                    </div>
                                 </div>
                             </div>
-                            <div className="col-lg">
-                                <div className="form-group">
-                                    {renderMaxDateTakenFilter()}
+                            <div className="row">
+                                <div className="col-lg">
+                                    <div className="form-group">
+                                        {renderMinDateUploadedFilter()}
+                                    </div>
+                                </div>
+                                <div className="col-lg">
+                                    <div className="form-group">
+                                        {renderMaxDateUploadedFilter()}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-lg">
+                                    <div className="form-group">
+                                        {renderMinDateModifiedFilter()}
+                                    </div>
+                                </div>
+                                <div className="col-lg">
+                                    <div className="form-group">
+                                        {renderMaxDateModifiedFilter()}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="row">
-                            <div className="col-lg">
-                                <div className="form-group">
-                                    {renderMinDateUploadedFilter()}
-                                </div>
-                            </div>
-                            <div className="col-lg">
-                                <div className="form-group">
-                                    {renderMaxDateUploadedFilter()}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-lg">
-                                <div className="form-group">
-                                    {renderMinDateModifiedFilter()}
-                                </div>
-                            </div>
-                            <div className="col-lg">
-                                <div className="form-group">
-                                    {renderMaxDateModifiedFilter()}
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                    <div className="text-center mt-4">
+                        <button className="btn btn-primary">Search</button>
                     </div>
                 </div>
-            </div>
+            </OutsideClickHandler>
         </div>
     );
 };
 
 AdvancedSearch.propTypes = {
-    isOpen: PropTypes.bool.isRequired
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

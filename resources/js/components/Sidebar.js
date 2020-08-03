@@ -1,6 +1,6 @@
 import React from 'react';
-import BatchForm from './BatchForm';
 import { GoSettings } from 'react-icons/go';
+import BatchForm from './BatchForm';
 import AdvancedSearch from './AdvancedSearch';
 
 export default class Sidebar extends React.Component {
@@ -56,7 +56,10 @@ export default class Sidebar extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <AdvancedSearch isOpen={this.state.showAdvancedSearch} />
+                    <AdvancedSearch
+                        isOpen={this.state.showAdvancedSearch}
+                        onClose={() => this.setState({ ...this.state, showAdvancedSearch: false })}
+                    />
                     <button type="submit" className="btn btn-primary btn-block">Search</button>
 				</form>
                 <hr />
